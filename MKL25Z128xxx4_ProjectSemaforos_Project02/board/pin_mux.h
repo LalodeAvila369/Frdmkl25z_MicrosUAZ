@@ -25,21 +25,6 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-#define SOPT5_UART0RXSRC_UART_RX 0x00u /*!<@brief UART0 receive data source select: UART0_RX pin */
-#define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART0 transmit data source select: UART0_TX pin */
-
-/*! @name PORTA2 (number 28), J1[4]/D1/UART0_TX
-  @{ */
-#define BOARD_INITPINS_DEBUG_UART_TX_PORT PORTA /*!<@brief PORT device name: PORTA */
-#define BOARD_INITPINS_DEBUG_UART_TX_PIN 2U     /*!<@brief PORTA pin index: 2 */
-                                                /* @} */
-
-/*! @name PORTA1 (number 27), J1[2]/D0/UART0_RX
-  @{ */
-#define BOARD_INITPINS_DEBUG_UART_RX_PORT PORTA /*!<@brief PORT device name: PORTA */
-#define BOARD_INITPINS_DEBUG_UART_RX_PIN 1U     /*!<@brief PORTA pin index: 1 */
-                                                /* @} */
-
 /*! @name PORTB0 (number 43), J10[2]/A0
   @{ */
 #define BOARD_INITPINS_NGreen_FGPIO FGPIOB /*!<@brief FGPIO device name: FGPIOB */
@@ -184,22 +169,6 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_WRed_PIN 4U     /*!<@brief PORTD pin index: 4 */
                                        /* @} */
 
-/*! @name PORTC8 (number 65), J1[14]
-  @{ */
-#define BOARD_INITPINS_WBlue_FGPIO FGPIOC /*!<@brief FGPIO device name: FGPIOC */
-#define BOARD_INITPINS_WBlue_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_INITPINS_WBlue_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_INITPINS_WBlue_PIN 8U     /*!<@brief PORTC pin index: 8 */
-                                        /* @} */
-
-/*! @name PORTC9 (number 66), J1[16]
-  @{ */
-#define BOARD_INITPINS_WSense_FGPIO FGPIOC /*!<@brief FGPIO device name: FGPIOC */
-#define BOARD_INITPINS_WSense_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_INITPINS_WSense_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_INITPINS_WSense_PIN 9U     /*!<@brief PORTC pin index: 9 */
-                                         /* @} */
-
 /*! @name PORTA13 (number 33), J2[2]/D8
   @{ */
 #define BOARD_INITPINS_PeopleSense_FGPIO FGPIOA /*!<@brief FGPIO device name: FGPIOA */
@@ -207,6 +176,22 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_PeopleSense_PORT PORTA /*!<@brief PORT device name: PORTA */
 #define BOARD_INITPINS_PeopleSense_PIN 13U    /*!<@brief PORTA pin index: 13 */
                                               /* @} */
+
+/*! @name PORTA1 (number 27), J1[2]/D0/UART0_RX
+  @{ */
+#define BOARD_INITPINS_WSense_FGPIO FGPIOA /*!<@brief FGPIO device name: FGPIOA */
+#define BOARD_INITPINS_WSense_GPIO GPIOA /*!<@brief GPIO device name: GPIOA */
+#define BOARD_INITPINS_WSense_PORT PORTA /*!<@brief PORT device name: PORTA */
+#define BOARD_INITPINS_WSense_PIN 1U     /*!<@brief PORTA pin index: 1 */
+                                         /* @} */
+
+/*! @name PORTA2 (number 28), J1[4]/D1/UART0_TX
+  @{ */
+#define BOARD_INITPINS_WBlue_FGPIO FGPIOA /*!<@brief FGPIO device name: FGPIOA */
+#define BOARD_INITPINS_WBlue_GPIO GPIOA /*!<@brief GPIO device name: GPIOA */
+#define BOARD_INITPINS_WBlue_PORT PORTA /*!<@brief PORT device name: PORTA */
+#define BOARD_INITPINS_WBlue_PIN 2U     /*!<@brief PORTA pin index: 2 */
+                                        /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

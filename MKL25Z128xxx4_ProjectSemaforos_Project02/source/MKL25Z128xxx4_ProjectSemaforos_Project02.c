@@ -36,8 +36,8 @@
 #define WGreen 4u
 #define WYellow 12u
 #define WRed 4u
-#define WBlue 8u
-#define WSense 9u
+#define WBlue 2u
+#define WSense 1u
 #define PeopleSense 13u
 
 typedef struct{
@@ -177,12 +177,12 @@ int main(void) {
 		GPIO_WritePinOutput(GPIOA, WGreen, FSM[estado].OVerde);
 		GPIO_WritePinOutput(GPIOA, WYellow, FSM[estado].OAmarillo);
 		GPIO_WritePinOutput(GPIOD, WRed, FSM[estado].ORojo);
-		GPIO_WritePinOutput(GPIOC, WBlue, FSM[estado].OAzul);
+		GPIO_WritePinOutput(GPIOA, WBlue, FSM[estado].OAzul);
 
     	NSensor=GPIO_ReadPinInput(GPIOC, NSense);
     	SSensor=GPIO_ReadPinInput(GPIOE, SSense);
     	ESensor=GPIO_ReadPinInput(GPIOC, ESense);
-    	WSensor=GPIO_ReadPinInput(GPIOC, WSense);
+    	WSensor=GPIO_ReadPinInput(GPIOA, WSense);
     	People= GPIO_ReadPinInput(GPIOA, PeopleSense);
 
     	if(NSensor == 0){
@@ -792,7 +792,7 @@ int main(void) {
 				TPM_SetTimerPeriod(TPM1, 64u);
 				TPM_StartTimer(TPM1, kTPM_SystemClock);
 				GPIO_TogglePinsOutput(GPIOA, 1u<<4u);
-				GPIO_TogglePinsOutput(GPIOC, 1u<<8u);
+				GPIO_TogglePinsOutput(GPIOA, 1u<<2u);
 				while(!(TPM1->STATUS & Mask)){			//Wait
 				}
 
@@ -893,7 +893,7 @@ int main(void) {
 				TPM_SetTimerPeriod(TPM1, 64u);
 				TPM_StartTimer(TPM1, kTPM_SystemClock);
 				GPIO_TogglePinsOutput(GPIOC, 1u<<0u);
-				GPIO_TogglePinsOutput(GPIOC, 1u<<8u);
+				GPIO_TogglePinsOutput(GPIOA, 1u<<2u);
 				while(!(TPM1->STATUS & Mask)){			//Wait
 				}
 

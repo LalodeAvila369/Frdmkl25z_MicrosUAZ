@@ -19,7 +19,8 @@ pin_labels:
 - {pin_num: '15', pin_signal: ADC0_DP3/ADC0_SE3/PTE22/TPM2_CH0/UART2_TX, label: 'J10[5]', identifier: SRed}
 - {pin_num: '16', pin_signal: ADC0_DM3/ADC0_SE7a/PTE23/TPM2_CH1/UART2_RX, label: 'J10[7]', identifier: SBlue}
 - {pin_num: '21', pin_signal: CMP0_IN5/ADC0_SE4b/PTE29/TPM0_CH2/TPM_CLKIN0, label: 'J10[9]', identifier: SSensor;SSense}
-- {pin_num: '28', pin_signal: TSI0_CH3/PTA2/UART0_TX/TPM2_CH1, label: 'J1[4]/D1/UART0_TX', identifier: DEBUG_UART_TX;WBlue}
+- {pin_num: '27', pin_signal: TSI0_CH2/PTA1/UART0_RX/TPM2_CH0, label: 'J1[2]/D0/UART0_RX', identifier: DEBUG_UART_RX;WSense}
+- {pin_num: '28', pin_signal: TSI0_CH3/PTA2/UART0_TX/TPM2_CH1, label: 'J1[4]/D1/UART0_TX', identifier: DEBUG_UART_TX;WBlue;W}
 - {pin_num: '30', pin_signal: TSI0_CH5/PTA4/I2C1_SDA/TPM0_CH1/NMI_b, label: 'J1[10]/D4', identifier: WGreen}
 - {pin_num: '31', pin_signal: PTA5/USB_CLKIN/TPM0_CH2, label: 'J1[12]/D5', identifier: WSensor;WSense}
 - {pin_num: '32', pin_signal: PTA12/TPM1_CH0, label: 'J1[8]/D3', identifier: WYellow}
@@ -63,8 +64,6 @@ void BOARD_InitBootPins(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '28', peripheral: UART0, signal: TX, pin_signal: TSI0_CH3/PTA2/UART0_TX/TPM2_CH1, identifier: DEBUG_UART_TX}
-  - {pin_num: '27', peripheral: UART0, signal: RX, pin_signal: TSI0_CH2/PTA1/UART0_RX/TPM2_CH0}
   - {pin_num: '43', peripheral: GPIOB, signal: 'GPIO, 0', pin_signal: ADC0_SE8/TSI0_CH0/PTB0/LLWU_P5/I2C0_SCL/TPM1_CH0, direction: OUTPUT}
   - {pin_num: '44', peripheral: GPIOB, signal: 'GPIO, 1', pin_signal: ADC0_SE9/TSI0_CH6/PTB1/I2C0_SDA/TPM1_CH1, identifier: NYellow, direction: OUTPUT}
   - {pin_num: '45', peripheral: GPIOB, signal: 'GPIO, 2', pin_signal: ADC0_SE12/TSI0_CH7/PTB2/I2C0_SCL/TPM2_CH0, direction: OUTPUT}
@@ -83,9 +82,9 @@ BOARD_InitPins:
   - {pin_num: '30', peripheral: GPIOA, signal: 'GPIO, 4', pin_signal: TSI0_CH5/PTA4/I2C1_SDA/TPM0_CH1/NMI_b, direction: OUTPUT, pull_enable: disable}
   - {pin_num: '32', peripheral: GPIOA, signal: 'GPIO, 12', pin_signal: PTA12/TPM1_CH0, direction: OUTPUT}
   - {pin_num: '77', peripheral: GPIOD, signal: 'GPIO, 4', pin_signal: PTD4/LLWU_P14/SPI1_PCS0/UART2_RX/TPM0_CH4, identifier: WRed, direction: OUTPUT}
-  - {pin_num: '65', peripheral: GPIOC, signal: 'GPIO, 8', pin_signal: CMP0_IN2/PTC8/I2C0_SCL/TPM0_CH4, direction: OUTPUT}
-  - {pin_num: '66', peripheral: GPIOC, signal: 'GPIO, 9', pin_signal: CMP0_IN3/PTC9/I2C0_SDA/TPM0_CH5, direction: INPUT, pull_select: up, pull_enable: enable}
   - {pin_num: '33', peripheral: GPIOA, signal: 'GPIO, 13', pin_signal: PTA13/TPM1_CH1, identifier: PeopleSense, direction: INPUT, pull_enable: enable}
+  - {pin_num: '27', peripheral: GPIOA, signal: 'GPIO, 1', pin_signal: TSI0_CH2/PTA1/UART0_RX/TPM2_CH0, identifier: WSense, direction: INPUT, pull_enable: enable}
+  - {pin_num: '28', peripheral: GPIOA, signal: 'GPIO, 2', pin_signal: TSI0_CH3/PTA2/UART0_TX/TPM2_CH1, identifier: WBlue, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -108,6 +107,20 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_PortD);
     /* Port E Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t WSense_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA1 (pin 27)  */
+    GPIO_PinInit(BOARD_INITPINS_WSense_GPIO, BOARD_INITPINS_WSense_PIN, &WSense_config);
+
+    gpio_pin_config_t WBlue_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA2 (pin 28)  */
+    GPIO_PinInit(BOARD_INITPINS_WBlue_GPIO, BOARD_INITPINS_WBlue_PIN, &WBlue_config);
 
     gpio_pin_config_t WGreen_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -200,20 +213,6 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTC7 (pin 64)  */
     GPIO_PinInit(BOARD_INITPINS_ESense_GPIO, BOARD_INITPINS_ESense_PIN, &ESense_config);
 
-    gpio_pin_config_t WBlue_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PTC8 (pin 65)  */
-    GPIO_PinInit(BOARD_INITPINS_WBlue_GPIO, BOARD_INITPINS_WBlue_PIN, &WBlue_config);
-
-    gpio_pin_config_t WSense_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PTC9 (pin 66)  */
-    GPIO_PinInit(BOARD_INITPINS_WSense_GPIO, BOARD_INITPINS_WSense_PIN, &WSense_config);
-
     gpio_pin_config_t WRed_config = {
         .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U
@@ -256,8 +255,18 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTE29 (pin 21)  */
     GPIO_PinInit(BOARD_INITPINS_SSense_GPIO, BOARD_INITPINS_SSense_PIN, &SSense_config);
 
-    /* PORTA1 (pin 27) is configured as UART0_RX */
-    PORT_SetPinMux(BOARD_INITPINS_DEBUG_UART_RX_PORT, BOARD_INITPINS_DEBUG_UART_RX_PIN, kPORT_MuxAlt2);
+    const port_pin_config_t WSense = {/* Internal pull-up resistor is enabled */
+                                      kPORT_PullUp,
+                                      /* Slow slew rate is configured */
+                                      kPORT_SlowSlewRate,
+                                      /* Passive filter is disabled */
+                                      kPORT_PassiveFilterDisable,
+                                      /* Low drive strength is configured */
+                                      kPORT_LowDriveStrength,
+                                      /* Pin is configured as PTA1 */
+                                      kPORT_MuxAsGpio};
+    /* PORTA1 (pin 27) is configured as PTA1 */
+    PORT_SetPinConfig(BOARD_INITPINS_WSense_PORT, BOARD_INITPINS_WSense_PIN, &WSense);
 
     /* PORTA12 (pin 32) is configured as PTA12 */
     PORT_SetPinMux(BOARD_INITPINS_WYellow_PORT, BOARD_INITPINS_WYellow_PIN, kPORT_MuxAsGpio);
@@ -275,8 +284,8 @@ void BOARD_InitPins(void)
     /* PORTA13 (pin 33) is configured as PTA13 */
     PORT_SetPinConfig(BOARD_INITPINS_PeopleSense_PORT, BOARD_INITPINS_PeopleSense_PIN, &PeopleSense);
 
-    /* PORTA2 (pin 28) is configured as UART0_TX */
-    PORT_SetPinMux(BOARD_INITPINS_DEBUG_UART_TX_PORT, BOARD_INITPINS_DEBUG_UART_TX_PIN, kPORT_MuxAlt2);
+    /* PORTA2 (pin 28) is configured as PTA2 */
+    PORT_SetPinMux(BOARD_INITPINS_WBlue_PORT, BOARD_INITPINS_WBlue_PIN, kPORT_MuxAsGpio);
 
     /* PORTA4 (pin 30) is configured as PTA4 */
     PORT_SetPinMux(BOARD_INITPINS_WGreen_PORT, BOARD_INITPINS_WGreen_PIN, kPORT_MuxAsGpio);
@@ -338,22 +347,6 @@ void BOARD_InitPins(void)
     /* PORTC7 (pin 64) is configured as PTC7 */
     PORT_SetPinConfig(BOARD_INITPINS_ESense_PORT, BOARD_INITPINS_ESense_PIN, &ESense);
 
-    /* PORTC8 (pin 65) is configured as PTC8 */
-    PORT_SetPinMux(BOARD_INITPINS_WBlue_PORT, BOARD_INITPINS_WBlue_PIN, kPORT_MuxAsGpio);
-
-    const port_pin_config_t WSense = {/* Internal pull-up resistor is enabled */
-                                      kPORT_PullUp,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as PTC9 */
-                                      kPORT_MuxAsGpio};
-    /* PORTC9 (pin 66) is configured as PTC9 */
-    PORT_SetPinConfig(BOARD_INITPINS_WSense_PORT, BOARD_INITPINS_WSense_PIN, &WSense);
-
     /* PORTD4 (pin 77) is configured as PTD4 */
     PORT_SetPinMux(BOARD_INITPINS_WRed_PORT, BOARD_INITPINS_WRed_PIN, kPORT_MuxAsGpio);
 
@@ -381,16 +374,6 @@ void BOARD_InitPins(void)
                                       kPORT_MuxAsGpio};
     /* PORTE29 (pin 21) is configured as PTE29 */
     PORT_SetPinConfig(BOARD_INITPINS_SSense_PORT, BOARD_INITPINS_SSense_PIN, &SSense);
-
-    SIM->SOPT5 = ((SIM->SOPT5 &
-                   /* Mask bits to zero which are setting */
-                   (~(SIM_SOPT5_UART0TXSRC_MASK | SIM_SOPT5_UART0RXSRC_MASK)))
-
-                  /* UART0 transmit data source select: UART0_TX pin. */
-                  | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX)
-
-                  /* UART0 receive data source select: UART0_RX pin. */
-                  | SIM_SOPT5_UART0RXSRC(SOPT5_UART0RXSRC_UART_RX));
 }
 /***********************************************************************************************************************
  * EOF
